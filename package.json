@@ -1,0 +1,22 @@
+{
+  "name": "tcp-check",
+  "version": "0.1.0",
+  "description": "TCP LISTENING CHECKER",
+  "main": "index.js",
+  "scripts": {
+    "install": "node-gyp configure build",
+    "test": "mocha tests"
+  },
+  "author": "YanagiEiichi <admin@web-tinker.com>",
+  "license": "MIT",
+  "keywords": [
+    "tcp health check"
+  ],
+  "devDependencies": {
+    "mocha": "^3.1.0",
+    "should": "^11.1.0"
+  },
+  "dependencies": {
+    "nan": "^2.4.0"
+  }
+}
