@@ -30,12 +30,12 @@ let tcpCheck = (ip, port, timeout) => new Promise((resolve, reject) => {
   let timer = setTimeout(reject, timeout, { name: 'TIMEOUT' });
 
   // Actual check
-  __tcpCheck(ip, port, status => {
+  __tcpCheck(ip, port, result => {
     clearTimeout(timer);
-    if (status) {
-      reject(status);
+    if (result.name === 'OK') {
+      resolve(result);
     } else {
-      resolve(status);
+      reject(result);
     }
   });
 
