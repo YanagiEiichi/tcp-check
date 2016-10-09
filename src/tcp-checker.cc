@@ -6,11 +6,10 @@ TcpChecker::TcpChecker(char *ip, unsigned int port, function<void(int status)> _
     status = func(__VA_ARGS__);                                                                             \
     if (status) {                                                                                           \
       cerr << "\033[31m" << uv_err_name(status) << ": " << uv_strerror(status) << "\033[0m" << endl;        \
-      done();                                                                                               \
+      close();                                                                                               \
       return;                                                                                               \
     }
 
-  self = this;
   callback = _callback;
 
   // Init Socket
@@ -39,34 +38,31 @@ TcpChecker::TcpChecker(char *ip, unsigned int port, function<void(int status)> _
 
 }
 
-void TcpChecker::free() {
-  if (~fd) {
+void TcpChecker::close() {
+  if (fd != -1) {
     uv_close((uv_handle_s *)&tcp_t, on_close);
     fd = -1;
-  }
-  if (!self) {
-    delete self;
-    self = NULL;
+  } else {
+    done();
   }
 }
 
 void TcpChecker::done() {
-  if (!self) return;
   auto name = status ? uv_err_name(status) : "OK";
   if (DEBUG) cout << "\033[34mfd: " << fd << ", status: " << name << "\033[0m" << endl;
   callback(status);
-  free();
+  delete this;
 }
 
 void TcpChecker::on_connect(uv_connect_t* req, int status) {
   auto that = (TcpChecker *)req->data;
-  if (!that->self) return;
   auto name = status ? uv_err_name(status) : "OK";
   if (DEBUG) cout << "\033[33mfd: " << that->fd << ", status: " << name << "\033[0m" << endl;
   that->status = status;
-  that->done();
+  that->close();
 };
 
 void TcpChecker::on_close(uv_handle_t* handle) {
-  // Socket Closed
+  auto that = (TcpChecker *)handle->data;
+  that->done();
 };

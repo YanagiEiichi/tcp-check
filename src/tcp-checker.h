@@ -11,9 +11,8 @@ class TcpChecker {
     static void on_close(uv_handle_t* handle);
     static void on_connect(uv_connect_t* req, int status);
     void done();
-    void free();
+    void close();
     function<void(int status)> callback;
-    TcpChecker *self;
   public:
     TcpChecker(char *ip, unsigned int port, function<void(int status)> cb);
 };

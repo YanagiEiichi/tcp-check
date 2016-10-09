@@ -30,7 +30,6 @@ void tcpCheck(const FunctionCallbackInfo<Value>& args) {
     auto isolate = context->GetIsolate();
     auto global = context->Global();
     auto fn = fn_p->Get(isolate);
-    delete fn_p;
     if (fn->IsFunction()) {
       if (status) {
         Local<String> name = STR(uv_err_name(status));
@@ -46,6 +45,7 @@ void tcpCheck(const FunctionCallbackInfo<Value>& args) {
     } else {
       if (DEBUG) cout << "\033[35m" << "`fn` is not a js function" << endl;
     }
+    delete fn_p;
   };
 
   new TcpChecker(ip, port, callback);
