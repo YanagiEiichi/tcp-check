@@ -1,31 +1,31 @@
 ## The tcp-check
 
-The **tcp-check** is used to check status of TCP `LISTENING` port.
-it will not change remote socket to `ESTABLISHED` state.
+The **tcp-check** is used to check the status of TCP `LISTENING` port.
+It will not change the remote socket to `ESTABLISHED` state.
 
 ## Background
 
-In the past, if you want to check a `LISTENING` port, you might:
+In the past, if you want to check a `LISTENING` port, you'll have to:
 
 1. try to connect remote port.
 2. close immediately after success.
 
-But this way will make connection `ESTABLISHED`.
-even you close immediately after connect,
-system will also deal the [4-way shaking](https://en.wikipedia.org/wiki/Transmission_Control_Protocol#Connection_termination) to close,
-and client socket will also change to `TIME_WAIT` state.
+But this makes connection `ESTABLISHED`.
+Even if you close immediately after connect,
+system will still go through the [4-way shaking](https://en.wikipedia.org/wiki/Transmission_Control_Protocol#Connection_termination) to close,
+and the client socket will also change to `TIME_WAIT` state.
 
-In `TIME_WAIT` state, socket will waits for 2 [MSL](https://en.wikipedia.org/wiki/Maximum_segment_lifetime) (about 2 minutes).
-huge amount of `TIME_WAIT` sockets may be run out of your ports.
+In `TIME_WAIT` state, the socket will wait for 2 [MSL](https://en.wikipedia.org/wiki/Maximum_segment_lifetime) (about 2 minutes).
+A huge amount of `TIME_WAIT` sockets may run out of your ports.
 
 ## Solution
 
-To avoid remove socket `ESTABLISHED`, set the `TCP_QUICKACK` to `0`.
-client will not send ACK in [3-way shaking](https://en.wikipedia.org/wiki/Transmission_Control_Protocol#Connection_establishment).
+To avoid remote socket being turned to `ESTABLISHED`, set the `TCP_QUICKACK` to `0`.
+The client will not send ACK in [3-way shaking](https://en.wikipedia.org/wiki/Transmission_Control_Protocol#Connection_establishment).
 
 To avoid [4-way shaking](https://en.wikipedia.org/wiki/Transmission_Control_Protocol#Connection_termination) and `TIME_WAIT`,
 enable the `SO_LINGER` option and set `l_linger` to `0`.
-the client closing packet will use RST to replace FIN, that make socket return directly to `CLOSED` state.
+The client closing packet will use RST to replace FIN, which makes socket return directly to `CLOSED` state.
 
 ## Usage
 
