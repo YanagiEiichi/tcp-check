@@ -18,5 +18,26 @@
   },
   "dependencies": {
     "nan": "^2.4.0"
+  },
+  "reciperConfig": {
+    "name": "tcp-check",
+    "darkColor": "#333",
+    "normalColor": "#666",
+    "primaryColor": "#000",
+    "languages": [
+      "javascript"
+    ],
+    "home": "/tcp-check/",
+    "items": [
+      {
+        "text": "Introduction",
+        "href": "/tcp-check/docs/intro/"
+      },
+      {
+        "text": "Github",
+        "href": "//github.com/YanagiEiichi/tcp-check",
+        "target": "_blank"
+      }
+    ]
   }
 }

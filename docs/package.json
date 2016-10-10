@@ -1,0 +1,47 @@
+{
+  "name": "jinkela",
+  "version": "1.2.5",
+  "description": "A MODULARIZATION SOLUTION OF FRONTEND ",
+  "main": "jinkela.js",
+  "author": "YanagiEiichi (yanagieiichi@web-tinker.com)",
+  "license": "MIT",
+  "scripts": {
+    "test": "ui-tester-start tests"
+  },
+  "reciperConfig": {
+    "name": "Jinkela",
+    "darkColor": "#333",
+    "normalColor": "#666",
+    "primaryColor": "#000",
+    "logoUrl": "//fuss10.elemecdn.com/9/ca/f88b429d6278cdf69e0027dfea51ejpeg.jpeg",
+    "languages": [
+      "xml",
+      "markdown",
+      "bash",
+      "javascript"
+    ],
+    "home": "/jinkela/",
+    "items": [
+      {
+        "text": "Introduction",
+        "href": "/jinkela/docs/intro/"
+      },
+      {
+        "text": "Directives",
+        "href": "/jinkela/docs/directives/"
+      },
+      {
+        "text": "Plugins",
+        "href": "/jinkela/docs/plugins/"
+      },
+      {
+        "text": "Github",
+        "href": "//github.com/YanagiEiichi/jinkela",
+        "target": "_blank"
+      }
+    ]
+  },
+  "devDependencies": {
+    "ui-tester": "~1.1.2"
+  }
+}
