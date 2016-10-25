@@ -1,12 +1,6 @@
 let __tcpCheck = require('./build/Release/tcpCheck');
 let net = require('net');
-
-class InvalidAddressError extends Error {
-  constructor() {
-    super('invalid ip address, must be a ipv4 string');
-    this.name = 'INVALID_IP_ADDRESS';
-  }
-}
+let dns = require('dns');
 
 class InvalidPortError extends Error {
   constructor() {
@@ -15,29 +9,32 @@ class InvalidPortError extends Error {
   }
 }
 
-let tcpCheck = (ip, port, timeout) => new Promise((resolve, reject) => {
+let tcpCheck = (host, port, timeout) => new Promise((resolve, reject) => {
 
-  // Type converting
-  ip += '';
+  let timer = setTimeout(reject, timeout * 1 || 1000, { name: 'TIMEOUT' });
+
+  host += '';
   port |= 0;
-  timeout = timeout * 1 || 1000;
 
-  // Value checking
-  if (!net.isIPv4(ip)) return reject(new InvalidAddressError());
   if (port < 1 || port > 65535) return reject(new InvalidPortError());
 
-  // Set timer
-  let timer = setTimeout(reject, timeout, { name: 'TIMEOUT' });
+  const onLookup = (error, ip) => {
+    if (error) return reject({ name: error.code });
+    actualCheck(ip, port);
+  };
 
-  // Actual check
-  __tcpCheck(ip, port, result => {
-    clearTimeout(timer);
-    if (result.name === 'OK') {
-      resolve(result);
-    } else {
-      reject(result);
-    }
-  });
+  const actualCheck = (ip, port) => {
+    __tcpCheck(ip, port, result => {
+      clearTimeout(timer);
+      if (result.name === 'OK') {
+        resolve(result);
+      } else {
+        reject(result);
+      }
+    });
+  };
+
+  net.isIPv4(host) ? actualCheck(host, port) : dns.lookup(host, { family: 4, timeout: 100 }, onLookup);
 
 });
 
