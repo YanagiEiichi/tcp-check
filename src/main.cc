@@ -48,6 +48,7 @@ void tcpCheck(const FunctionCallbackInfo<Value>& args) {
     Nan::MakeCallback(global, fn, 1, argv);
 
     // Delete the Persistent<Function>
+    fn_p->Reset();
     delete fn_p;
 
   };
